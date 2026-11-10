@@ -1,0 +1,15 @@
+.DS_Store
+preview/sources/
+preview/profile-*.png
+preview/activity-*.png
+preview/qa-*.json
+preview/render-request.json
+preview/github-rendered.html
+preview/design-history/
+**/node_modules/
+preview/vendor/
+assets/metrics-overview.svg
+assets/metrics-languages.svg
+
+review-repos/
+review-private/

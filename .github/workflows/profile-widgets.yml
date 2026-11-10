@@ -1,0 +1,84 @@
+name: Update profile widgets
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 09:17 Asia/Shanghai, once a day.
+    - cron: '17 1 * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: profile-widgets
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: scripts/widgets/package-lock.json
+
+      - name: Generate Pac-Man from the contribution calendar
+        env:
+          PROFILE_USERNAME: FlyingDoggy
+          METRICS_TOKEN: ${{ secrets.METRICS_TOKEN || github.token }}
+        run: |
+          npm ci --prefix scripts/widgets --ignore-scripts
+          node scripts/widgets/pacman.mjs
+
+      - name: Generate activity Metrics
+        uses: lowlighter/metrics@65836723097537a54cd8eb90f61839426b4266b6 # v3.34.0
+        with:
+          token: ${{ secrets.METRICS_TOKEN || github.token }}
+          user: FlyingDoggy
+          filename: metrics-overview.svg
+          output_action: none
+          base: activity, community
+          config_timezone: Asia/Shanghai
+          config_animations: 'no'
+          config_padding: 0, 8
+          repositories_forks: 'no'
+          repositories_affiliations: owner
+
+      - name: Generate language Metrics
+        uses: lowlighter/metrics@65836723097537a54cd8eb90f61839426b4266b6 # v3.34.0
+        with:
+          token: ${{ secrets.METRICS_TOKEN || github.token }}
+          user: FlyingDoggy
+          filename: metrics-languages.svg
+          output_action: none
+          base: ''
+          config_timezone: Asia/Shanghai
+          config_animations: 'no'
+          config_padding: 0, 8
+          repositories_forks: 'no'
+          repositories_affiliations: owner
+          plugin_languages: 'yes'
+          plugin_languages_limit: 5
+          plugin_languages_details: percentage
+          plugin_languages_sections: most-used
+          plugin_languages_other: 'yes'
+
+      - name: Match the light and dark GitHub themes
+        run: |
+          cp /metrics_renders/metrics-overview.svg assets/metrics-overview.svg
+          cp /metrics_renders/metrics-languages.svg assets/metrics-languages.svg
+          node scripts/widgets/metrics-themes.mjs --from-action
+
+      - name: Commit updated images
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/pacman-*.svg assets/metrics-*-light.svg assets/metrics-*-dark.svg
+          if ! git diff --cached --quiet; then
+            git commit -m 'chore: refresh profile widgets'
+            git push
+          fi
