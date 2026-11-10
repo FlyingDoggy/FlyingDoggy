@@ -60,12 +60,12 @@
 
 <p>
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./assets/metrics-overview-dark.svg">
-    <img src="./assets/metrics-overview-light.svg" width="440" align="top" alt="FlyingDoggy 的 GitHub 活动与社区统计">
+    <source media="(prefers-color-scheme: dark)" srcset="./assets/metrics-overview-v2-dark.svg">
+    <img src="./assets/metrics-overview-v2-light.svg" width="440" align="top" alt="FlyingDoggy 的 GitHub 活动与社区统计">
   </picture>
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./assets/metrics-languages-dark.svg">
-    <img src="./assets/metrics-languages-light.svg" width="440" align="top" alt="FlyingDoggy 公开仓库中的常用编程语言分布">
+    <source media="(prefers-color-scheme: dark)" srcset="./assets/metrics-languages-v2-dark.svg">
+    <img src="./assets/metrics-languages-v2-light.svg" width="440" align="top" alt="FlyingDoggy 公开仓库中的常用编程语言分布">
   </picture>
 </p>
 

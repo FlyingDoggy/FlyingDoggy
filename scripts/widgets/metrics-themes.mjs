@@ -12,7 +12,7 @@ export function palette(svg, theme) {
 
 export async function writeThemes(stem, svg) {
   for (const theme of ['light', 'dark']) {
-    const target = new URL(`../../assets/metrics-${stem}-${theme}.svg`, import.meta.url);
+    const target = new URL(`../../assets/metrics-${stem}-v2-${theme}.svg`, import.meta.url);
     await writeFile(target, palette(svg, theme));
   }
 }
