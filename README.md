@@ -41,8 +41,6 @@
 <p><b>企业智能体验 EIX 2.0</b> · 企业 AI 的设计白皮书、设计系统与可交互参考。<br>
 <a href="https://github.com/FlyingDoggy/enterprise-intelligence-experience">查看源码 ↗</a></p>
 
-<p><sub>财务助手为概念示意；Atlas 与 EIX 使用实际演示界面截取，数据为合成或占位内容。</sub></p>
-
 <p>其他小工具：
 <a href="https://github.com/FlyingDoggy/frontend-slides-editable">Frontend Slides Editable</a> ·
 <a href="https://github.com/FlyingDoggy/sprout-codex/tree/codex/sprout-port/mods/sprout-codex">小苗 · Codex</a>
