@@ -19,6 +19,10 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Queued runs must start from the latest branch, not the dispatch SHA.
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
@@ -95,5 +99,7 @@ jobs:
           git add assets/pacman-*.svg assets/metrics-*-light.svg assets/metrics-*-dark.svg
           if ! git diff --cached --quiet; then
             git commit -m 'chore: refresh profile widgets'
-            git push
+            # Keep README edits made while the images were being generated.
+            git pull --rebase origin "$GITHUB_REF_NAME"
+            git push origin "HEAD:$GITHUB_REF_NAME"
           fi
