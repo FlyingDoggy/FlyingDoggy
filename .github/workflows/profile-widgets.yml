@@ -26,6 +26,18 @@ jobs:
           cache: npm
           cache-dependency-path: scripts/widgets/package-lock.json
 
+      - name: Check Metrics configuration
+        id: metrics
+        env:
+          METRICS_TOKEN: ${{ secrets.METRICS_TOKEN }}
+        run: |
+          if [ -n "$METRICS_TOKEN" ]; then
+            echo 'enabled=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'enabled=false' >> "$GITHUB_OUTPUT"
+            echo 'Metrics: keeping the verified snapshot until a scope-less classic METRICS_TOKEN is configured.'
+          fi
+
       - name: Generate Pac-Man from the contribution calendar
         env:
           PROFILE_USERNAME: FlyingDoggy
@@ -35,9 +47,10 @@ jobs:
           node scripts/widgets/pacman.mjs
 
       - name: Generate activity Metrics
+        if: steps.metrics.outputs.enabled == 'true'
         uses: lowlighter/metrics@65836723097537a54cd8eb90f61839426b4266b6 # v3.34.0
         with:
-          token: ${{ secrets.METRICS_TOKEN || github.token }}
+          token: ${{ secrets.METRICS_TOKEN }}
           user: FlyingDoggy
           filename: metrics-overview.svg
           output_action: none
@@ -49,9 +62,10 @@ jobs:
           repositories_affiliations: owner
 
       - name: Generate language Metrics
+        if: steps.metrics.outputs.enabled == 'true'
         uses: lowlighter/metrics@65836723097537a54cd8eb90f61839426b4266b6 # v3.34.0
         with:
-          token: ${{ secrets.METRICS_TOKEN || github.token }}
+          token: ${{ secrets.METRICS_TOKEN }}
           user: FlyingDoggy
           filename: metrics-languages.svg
           output_action: none
@@ -68,6 +82,7 @@ jobs:
           plugin_languages_other: 'yes'
 
       - name: Match the light and dark GitHub themes
+        if: steps.metrics.outputs.enabled == 'true'
         run: |
           cp /metrics_renders/metrics-overview.svg assets/metrics-overview.svg
           cp /metrics_renders/metrics-languages.svg assets/metrics-languages.svg
